@@ -6,7 +6,7 @@ const Workstation = new Schema(
         name: {type: String},
         origin: { type: String },
         destination: { type: String },
-        comments: {type: String},
+        flag: { type: Boolean},
         project_id: {
             type: Schema.Types.ObjectId, 
             ref: 'project',

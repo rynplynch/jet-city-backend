@@ -1,12 +1,12 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const Monitor = new Schema(
+const Phone = new Schema(
     {
-        size: {type: String},
         power: {type: Boolean},
-        video: {type: String},
-        asset: {type: String},
+        patch_cable_in: {type: Boolean},
+        patch_cable_out: {type: Boolean},
+        jack_number: {type: String},
         decommission: {type: Boolean},
         workstation_id: {
             type: Schema.Types.ObjectId, 
@@ -17,4 +17,4 @@ const Monitor = new Schema(
     { timestamps: true },
 )
 
-module.exports = mongoose.model('monitor', Monitor)
+module.exports = mongoose.model('phone', Phone)

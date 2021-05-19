@@ -1,11 +1,13 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const Monitor = new Schema(
+const Dock = new Schema(
     {
-        size: {type: String},
+        usb_c: {type: Boolean},
+        proprietary: {type: Boolean},
         power: {type: Boolean},
-        video: {type: String},
+        patch_cable: {type: Boolean},
+        jack_number: {type: String},
         asset: {type: String},
         decommission: {type: Boolean},
         workstation_id: {
@@ -17,4 +19,4 @@ const Monitor = new Schema(
     { timestamps: true },
 )
 
-module.exports = mongoose.model('monitor', Monitor)
+module.exports = mongoose.model('dock', Dock)
