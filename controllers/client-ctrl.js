@@ -7,6 +7,7 @@ create = async (req, res, next) =>{
         const newClient = await Client.create({
             name:`${body.name}`
         })
+        console.log(body)
         res.send(newClient);
     } catch (err) {
         next(err);
@@ -59,7 +60,7 @@ remove = async (req, res) => {
                 .json({ success: false, error: `Client not found` })
         }
 
-        return res.status(200).json({ success: true, data: client })
+        else return res.status(200).json({ success: true, data: client })
     }).catch(err => console.log(err))
 }
 find = async (req, res) => {

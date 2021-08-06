@@ -66,7 +66,7 @@ remove = async (req, res) => {
                 .json({ success: false, error: `Project not found` })
         }
 
-        return res.status(200).json({ success: true, data: project })
+        else return res.status(200).json({ success: true, data: project })
     }).catch(err => console.log(err))
 }
 find = async (req, res) => {
