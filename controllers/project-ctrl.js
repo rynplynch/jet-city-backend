@@ -1,123 +1,67 @@
-const Project = require('../models/project-model')
-var mongoose = require('mongoose');
+const pool = require('../db/index')
 
-create = async (req, res, next) =>{
-    try {
-        const body = req.body
-        const newProject = await Project.create({
-            name:`${body.name}`,
-            startTime:`${body.startTime}`,
-            endTime:`${body.endTime}`,
-            address:`${body.address}`,
-            client_id: body.client_id
-        })
-        res.send(newProject);
-    } catch (err) {
-        next(err);
-    }
-}
-update = async (req, res) => {
-    const body = req.body
+create = async (req, res) =>{
+    const { name, client_id } = req.body
 
-    if (!body) {
-        return res.status(400).json({
-            success: false,
-            error: 'You must provide a body to update',
-        })
-    }
-
-    Project.findOne({ _id: req.params.id }, (err, project) => {
-        if (err) {
-            return res.status(404).json({
-                err,
-                message: 'Project not found!',
-            })
-        }
-        project.name = body.name
-        project.startTime = body.startTime
-        project.endTime = body.endTime
-        project.address = body.address
-        project
-            .save()
-            .then(() => {
-                return res.status(200).json({
-                    success: true,
-                    id: project._id,
-                    message: 'Project updated!',
-                })
-            })
-            .catch(error => {
-                return res.status(404).json({
-                    error,
-                    message: 'Project not updated!',
-                })
-            })
+    pool.query('INSERT INTO projects (name, client_id) VALUES ($1, $2) RETURNING *', [name, client_id], ( error,results ) => {
+      if (error) {
+        throw error
+      }
+      res.status(201).json(`Project added with ID: ${results.rows[0].id}`)
     })
 }
+
+update = async (req, res) => {
+  const id = parseInt(req.params.id)
+  const { name } = req.body
+
+  pool.query(
+    'UPDATE projects SET name = $1 WHERE id = $2',
+    [name, id],
+    (error, results) => {
+      if (error) {
+        throw error
+      }
+      res.status(200).send(`User modified with ID: ${id}`)
+    }
+  )
+}
+
 remove = async (req, res) => {
-    await Project.findOneAndDelete({ _id: req.params.id }, (err, project) => {
-        if (err) {
-            return res.status(400).json({ success: false, error: err })
-        }
+  const id = parseInt(req.params.id)
 
-        if (!project) {
-            return res
-                .status(404)
-                .json({ success: false, error: `Project not found` })
-        }
-
-        return res.status(200).json({ success: true, data: project })
-    }).catch(err => console.log(err))
+  pool.query('DELETE FROM projects WHERE id = $1', [id], (error, results) => {
+    if (error) {
+      throw error
+    }
+    res.status(200).send(`User deleted with ID: ${id}`)
+  })
 }
+
 find = async (req, res) => {
-    await Project.findOne({ _id: req.params.id }, (err, project) => {
-        if (err) {
-            return res.status(400).json({ success: false, error: err })
-        }
+    const id = parseInt(req.params.id)
 
-        if (!project) {
-            return res
-                .status(404)
-                .json({ success: false, error: `Project not found` })
-        }
-        return res.status(200).json({ success: true, data: project })
-    }).catch(err => console.log(err))
+    pool.query('SELECT * FROM clients WHERE id = $1', [id], (error, results) => {
+      if (error) {
+        throw error
+      }
+      res.status(200).json(results.rows)
+    })
 }
+
 getAll = async (req, res) => {
-    await Project.find({}, (err, projects) => {
-        
-        if (err) {
-            return res.status(400).json({ success: false, error: err })
+    pool.query('SELECT * FROM projects ORDER BY id ASC', (error, results) => {
+        if (error) {
+          throw error
         }
-        if (!projects.length) {
-            return res
-                .status(404)
-                .json({ success: false, error: `Projects not found` })
-        }
-        return res.status(200).json({ success: true, data: projects })
-    }).catch(err => console.log(err))
+        res.status(200).json(results.rows)
+      })
 }
-findByClient  = async (req, res) => {
-    await Project.find({ client_id: req.params.id }, (err, project) => {
-        if (err) {
-            return res.status(400).json({ success: false, error: err })
-        }
-
-        if (!project) {
-            return res
-                .status(404)
-                .json({ success: false, error: `No projects found for client` })
-        }
-        return res.status(200).json({ success: true, data: project })
-    }).catch(err => console.log(err))
-}
-
 
 module.exports = {
     create,
     update,
     remove,
     getAll,
-    find,
-    findByClient
+    find
 }
