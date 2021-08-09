@@ -1,23 +1,23 @@
 const pool = require('../db/index')
 
 create = async (req, res) =>{
-    const { name, client_id } = req.body
+    const { name, email } = req.body
 
-    pool.query('INSERT INTO projects (name, client_id) VALUES ($1, $2) RETURNING *', [name, client_id], ( error,results ) => {
+    pool.query('INSERT INTO users (name, email) VALUES ($1, $2) RETURNING *', [name, email], ( error,results ) => {
       if (error) {
         throw error
       }
-      res.status(201).json(`Project added with ID: ${results.rows[0].id}`)
+      res.status(201).json(`User added with ID: ${results.rows[0].id}`)
     })
 }
 
 update = async (req, res) => {
   const id = parseInt(req.params.id)
-  const { name } = req.body
+  const { name, email } = req.body
 
   pool.query(
-    'UPDATE projects SET name = $1 WHERE id = $2',
-    [name, id],
+    'UPDATE users SET name = $1, email = $2 WHERE id = $3',
+    [name, email, id],
     (error, results) => {
       if (error) {
         throw error
@@ -30,23 +30,18 @@ update = async (req, res) => {
 remove = async (req, res) => {
   const id = parseInt(req.params.id)
 
-<<<<<<< HEAD
-        else return res.status(200).json({ success: true, data: project })
-    }).catch(err => console.log(err))
-=======
-  pool.query('DELETE FROM projects WHERE id = $1', [id], (error, results) => {
+  pool.query('DELETE FROM users WHERE id = $1', [id], (error, results) => {
     if (error) {
       throw error
     }
     res.status(200).send(`User deleted with ID: ${id}`)
   })
->>>>>>> postsql
 }
 
 find = async (req, res) => {
     const id = parseInt(req.params.id)
 
-    pool.query('SELECT * FROM clients WHERE id = $1', [id], (error, results) => {
+    pool.query('SELECT * FROM users WHERE id = $1', [id], (error, results) => {
       if (error) {
         throw error
       }
@@ -55,7 +50,7 @@ find = async (req, res) => {
 }
 
 getAll = async (req, res) => {
-    pool.query('SELECT * FROM projects ORDER BY id ASC', (error, results) => {
+    pool.query('SELECT * FROM users ORDER BY id ASC', (error, results) => {
         if (error) {
           throw error
         }

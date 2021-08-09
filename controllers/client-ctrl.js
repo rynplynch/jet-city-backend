@@ -1,6 +1,6 @@
-const Client = require('../models/client-model')
-var mongoose = require('mongoose');
+const pool = require('../db/index')
 
+<<<<<<< HEAD
 create = async (req, res, next) =>{
     try {
         const body = req.body
@@ -12,84 +12,69 @@ create = async (req, res, next) =>{
     } catch (err) {
         next(err);
     }
-}
-update = async (req, res) => {
-    const body = req.body
+=======
+create = async (req, res) =>{
+    const { name } = req.body
 
-    if (!body) {
-        return res.status(400).json({
-            success: false,
-            error: 'You must provide a body to update',
-        })
-    }
-
-    Client.findOne({ _id: req.params.id }, (err, client) => {
-        if (err) {
-            return res.status(404).json({
-                err,
-                message: 'Client not found!',
-            })
-        }
-        client.name = body.name
-        client
-            .save()
-            .then(() => {
-                return res.status(200).json({
-                    success: true,
-                    id: client._id,
-                    message: 'Client updated!',
-                })
-            })
-            .catch(error => {
-                return res.status(404).json({
-                    error,
-                    message: 'Client not updated!',
-                })
-            })
+    pool.query('INSERT INTO clients (name) VALUES ($1) RETURNING *', [name], ( error,results ) => {
+      if (error) {
+        throw error
+      }
+      res.status(200).json(results.rows)
     })
+>>>>>>> postsql
 }
+
+update = async (req, res) => {
+  const id = parseInt(req.params.id)
+  const { name } = req.body
+
+  pool.query(
+    'UPDATE clients SET name = $1 WHERE id = $2 RETURNING *',
+    [name, id],
+    (error, results) => {
+      if (error) {
+        throw error
+      }
+      res.status(200).json(results.rows)
+    }
+  )
+}
+
 remove = async (req, res) => {
-    await Client.findOneAndDelete({ _id: req.params.id }, (err, client) => {
-        if (err) {
-            return res.status(400).json({ success: false, error: err })
-        }
+  const id = parseInt(req.params.id)
 
-        if (!client) {
-            return res
-                .status(404)
-                .json({ success: false, error: `Client not found` })
-        }
-
+<<<<<<< HEAD
         else return res.status(200).json({ success: true, data: client })
     }).catch(err => console.log(err))
+=======
+  pool.query('DELETE FROM clients WHERE id = $1', [id], (error, results) => {
+    if (error) {
+      throw error
+    }
+    res.status(200).send(`client deleted with ID: ${id}`)
+  })
+>>>>>>> postsql
 }
-find = async (req, res) => {
-    await Client.findOne({ _id: req.params.id }, (err, client) => {
-        if (err) {
-            return res.status(400).json({ success: false, error: err })
-        }
 
-        if (!client) {
-            return res
-                .status(404)
-                .json({ success: false, error: `Client not found` })
-        }
-        return res.status(200).json({ success: true, data: client })
-    }).catch(err => console.log(err))
+find = async (req, res) => {
+    const id = parseInt(req.params.id)
+
+    pool.query('SELECT * FROM clients WHERE id = $1', [id], (error, results) => {
+      if (error) {
+        throw error
+      }
+      res.status(200).json(results.rows)
+    })
 }
+
 getAll = async (req, res) => {
-    await Client.find({}, (err, client) => {
-        
-        if (err) {
-            return res.status(400).json({ success: false, error: err })
+    pool.query('SELECT * FROM clients ORDER BY id ASC', (error, results) => {
+        if (error) {
+          throw error
         }
-        if (!client.length) {
-            return res
-                .status(404)
-                .json({ success: false, error: `Client not found` })
-        }
-        return res.status(200).json({ success: true, data: client })
-    }).catch(err => console.log(err))
+        res.status(200).json(results.rows)
+      })
 }
 
 module.exports = {
