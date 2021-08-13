@@ -10,5 +10,5 @@ router.delete('/project/:id', ProjectCtrl.remove)
 router.get('/project/:id', ProjectCtrl.find)
 router.get('/project', ProjectCtrl.getAll)
 
-//router.get('/client/project/:id', ProjectCtrl.findByClient)
+router.get('/client/project/:id', ProjectCtrl.findByClient)
 module.exports = router

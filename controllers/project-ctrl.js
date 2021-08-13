@@ -7,7 +7,7 @@ create = async (req, res) =>{
       if (error) {
         throw error
       }
-      res.status(201).json(`Project added with ID: ${results.rows[0].id}`)
+      res.status(200).json(results.rows)
     })
 }
 
@@ -22,7 +22,7 @@ update = async (req, res) => {
       if (error) {
         throw error
       }
-      res.status(200).send(`User modified with ID: ${id}`)
+      res.status(200).json(results.rows)
     }
   )
 }
@@ -30,23 +30,18 @@ update = async (req, res) => {
 remove = async (req, res) => {
   const id = parseInt(req.params.id)
 
-<<<<<<< HEAD
-        else return res.status(200).json({ success: true, data: project })
-    }).catch(err => console.log(err))
-=======
   pool.query('DELETE FROM projects WHERE id = $1', [id], (error, results) => {
     if (error) {
       throw error
     }
-    res.status(200).send(`User deleted with ID: ${id}`)
+    res.status(200).json(results.rows)
   })
->>>>>>> postsql
 }
 
 find = async (req, res) => {
     const id = parseInt(req.params.id)
 
-    pool.query('SELECT * FROM clients WHERE id = $1', [id], (error, results) => {
+    pool.query('SELECT * FROM projects WHERE id = $1', [id], (error, results) => {
       if (error) {
         throw error
       }
@@ -63,10 +58,22 @@ getAll = async (req, res) => {
       })
 }
 
+findByClient = async (req, res) => {
+  const id = parseInt(req.params.id)
+
+  pool.query('SELECT * FROM projects WHERE client_id = $1', [id], (error, results) => {
+    if (error) {
+      throw error
+    }
+    res.status(200).json(results.rows)
+  })
+}
+
 module.exports = {
     create,
     update,
     remove,
     getAll,
-    find
+    find,
+    findByClient
 }
