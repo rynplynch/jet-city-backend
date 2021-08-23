@@ -6,6 +6,7 @@ require('dotenv').config()
 const userRouter = require('./routes/user-router')
 const clientRouter = require('./routes/client-router')
 const projectRouter = require('./routes/project-router')
+const workstationRouter = require('./routes/workstation-router')
 
 const app = express()
 const apiPort = process.env.BE_PORT
@@ -18,10 +19,11 @@ app.get('/', (req, res) => {
     res.json({info: 'Node.js, Express, and Postgres API'})
 })
 
-app.use('/api',
+app.use('/api/v1',
 userRouter,
 clientRouter,
-projectRouter
+projectRouter,
+workstationRouter
 )
 
 

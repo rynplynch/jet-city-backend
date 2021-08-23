@@ -1,4 +1,4 @@
-const pool = require('../db/index')
+const pool = require('../db')
 
 create = async (req, res) =>{
     const { name, client_id } = req.body
@@ -16,7 +16,7 @@ update = async (req, res) => {
   const { name } = req.body
 
   pool.query(
-    'UPDATE projects SET name = $1 WHERE id = $2',
+    'UPDATE projects SET name = $1 WHERE id = $2 RETURNING *',
     [name, id],
     (error, results) => {
       if (error) {
