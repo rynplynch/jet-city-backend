@@ -20,7 +20,7 @@ create = async (req, res) =>{
     const createWorkstation = await db.createOne("workstations", fields);
 
     if (createWorkstation) {
-      console.log(`team ${createWorkstation.name} created successfully`);
+      console.log(`Workstation with id ${createWorkstation.id} created successfully`);
       return res.json(createWorkstation);
     }
     res.status(404).json({ msg: "Bad request" });
@@ -29,6 +29,7 @@ create = async (req, res) =>{
     res.status(500).send({ msg: "Server error" });
   }
 }
+
 update = async (req, res) => {
   try {
     console.log("[PUT] {api/v1/workstation}");
@@ -49,7 +50,7 @@ update = async (req, res) => {
     const updatedWorkstation = await db.updateOne("workstations", conditions, fields);
 
     if (updatedWorkstation) {
-      console.log(`team ${updatedWorkstation.name} updated successfully`);
+      console.log(`Workstation with id ${updatedWorkstation.id} updated successfully`);
       return res.json(updatedWorkstation);
     }
     res.status(404).json({ msg: "Bad request" });
@@ -71,42 +72,71 @@ remove = async (req, res) => {
   })
 }
 
-find = async (req, res) => {
-    const id = parseInt(req.params.id)
+findById = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const column = req.body.column;
+    const conditions = {id: userId} ;
+    console.log(`[GET] {api/v1/workstation/${userId}}`);
+    const findWorkstation = await db.findSelection("workstations", conditions, column);
 
-    pool.query('SELECT * FROM workstations WHERE id = $1', [id], (error, results) => {
-      if (error) {
-        throw error
-      }
-      res.status(200).json(results.rows)
-    })
-}
-
-getAll = async (req, res) => {
-    pool.query('SELECT * FROM workstations ORDER BY id ASC', (error, results) => {
-        if (error) {
-          throw error
-        }
-        res.status(200).json(results.rows)
-      })
+    if (findWorkstation) {
+      console.log(`Workstation with id ${userId} found successfully`);
+      return res.json(findWorkstation);
+    }
+    res.status(404).json({ msg: "Bad request" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ msg: "Server error" });
+  }
 }
 
 findByProject = async (req, res) => {
-  const id = parseInt(req.params.id)
+  try {
+    const project_id = req.params.id;
+    const column = req.body.column;
+    const conditions = { project_id: project_id };
+    console.log(`[GET] {api/v1/project/workstation/${project_id}}`);
+    const findWorkstation = await db.findSelection("workstations", conditions, column);
 
-  pool.query('SELECT * FROM workstations WHERE project_id = $1', [id], (error, results) => {
-    if (error) {
-      throw error
+    if (findWorkstation) {
+      console.log(`Workstation with project_id ${project_id} found successfully`);
+      return res.json(findWorkstation);
     }
-    res.status(200).json(results.rows)
-  })
+    res.status(404).json({ msg: "Bad request" });
+  } 
+
+  catch (err) {
+    console.error(err);
+    res.status(500).send({ msg: "Server error" });
+  }
+}
+
+findAll = async (req, res) => {
+  try {
+    const column = req.body.column;
+    const conditions = undefined ;
+    const findWorkstation = await db.findSelection("workstations", conditions, column);
+    console.log(`[GET] {api/v1/workstation}`);
+
+    if (findWorkstation) {
+      console.log(`Workstations found successfully`);
+      return res.json(findWorkstation);
+    }
+    res.status(404).json({ msg: "Bad request" });
+  } 
+  
+  catch (err) {
+    console.error(err);
+    res.status(500).send({ msg: "Server error" });
+  }
 }
 
 module.exports = {
     create,
     update,
     remove,
-    getAll,
-    find,
+    findAll,
+    findById,
     findByProject
 }
