@@ -83,4 +83,8 @@ exports.insert = (tableName, fields = {}) => {
   return { text, values };
 }
 
-exports.remove = (tableName, conditions = {}, data = []) => {}
+exports.remove = (tableName, conditions, field) => {
+  let text = `DELETE FROM ${tableName} WHERE "${field}" IN (${conditions});` ;
+
+  return { text };
+}

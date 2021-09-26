@@ -7,7 +7,7 @@ const router = express.Router()
 
 router.post('/workstation', WorkstationCtrl.create)
 router.put('/workstation/:id', WorkstationCtrl.update)
-router.delete('/workstation/:id', WorkstationCtrl.remove)
+router.delete('/workstation', WorkstationCtrl.remove)
 router.get('/workstation/:id', WorkstationCtrl.findById)
 router.get('/workstation', WorkstationCtrl.findAll)
 

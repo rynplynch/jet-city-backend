@@ -34,7 +34,7 @@ module.exports = {
     },
 
     //Updates table
-    //Takes in table name, id of row, and fields the values to be updated
+    //Takes in table name (entity), id of row (conditions), and fields- the values to be updated
     //example 'workstation', {id:20}, {name:NEW, destination:UPDATED ...}
     updateOne: async (entity, conditions, fields) => {
         if (!entity) throw new Error("no entity table specified");
@@ -75,7 +75,25 @@ module.exports = {
         return resp;
     },
 
-    deleteOne: async (entity, conditions, data) => {
+    //Delete one or many from table
+    //Take the table name, a single field, and an array of values that will be deleted
+    //If any of those values are found in the field specified the entire row will be deleted
+    //example 'workstations', [20, 21, 50, ...], 'id'
+    deleteOneOrMany: async (entity, conditions, field) => {
+        if (!entity) throw new Error("no entity table specified");
+
+        let resp;   
+        const { text } = remove(entity, conditions, field);
+
+        try {
+            rs = await pool.query(text);
+            resp = rs.rows
+        } catch (err) {
+            console.error(err);
+            throw err;
+        }
+
+        return resp;
     },
 
     //Find selection based upon table name, conditions, and column desired
