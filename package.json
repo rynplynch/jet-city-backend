@@ -1,7 +1,8 @@
 {
-  "name": "server",
+  "type": "module",
+  "name": "Jet City I.T. RestAPI backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "This backend will server up data stored in a postgres database \nfor use in the frontend. Endpoints will have sensible naming \nto reflect the structor of the data and how each object relates",
   "main": "index.js",
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -10,19 +11,27 @@
     "express": "^4.17.1",
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.18.0"
+    "sequelize": "^6.18.0",
+    "sinon": "^13.0.2"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.18.0",
+    "@typescript-eslint/parser": "^5.18.0",
     "chai": "^4.3.6",
+    "eslint": "^8.13.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.29.4",
     "mocha": "^9.2.2",
     "nodemon": "^2.0.15"
   },
   "scripts": {
     "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js"
+    "test": "./node_modules/.bin/mocha test",
+    "dev": "nodemon index.js",
+    "lint": "eslint . --fix"
   },
   "keywords": [],
-  "author": "",
+  "author": "Ryan Lynch",
   "license": "ISC"
 }

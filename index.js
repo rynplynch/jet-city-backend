@@ -1,30 +1,39 @@
-const express = require('express')
-const cors = require('cors')
-require('dotenv').config()
+/*
+ * Entry point for our rest api.
+ * We import our enviroment variables and the router that define our api.
+ */
 
-//importing routes for objects
-const userRouter = require('./routes/user-router')
-const clientRouter = require('./routes/client-router')
-const projectRouter = require('./routes/project-router')
-const workstationRouter = require('./routes/workstation-router')
+import express from "express";
+import cors from "cors";
 
-const app = express()
-const apiPort = process.env.BE_PORT
+//import our enviroment variables
+//.config() acutally loads in our variable
+import dotenv from "dotenv";
+dotenv.config();
 
-app.use(express.urlencoded({ extended: true }))
-app.use(cors())
-app.use(express.json())
+//importing routes
+import user from "./controllers/orm-user-ctrl.js";
 
-app.get('/', (req, res) => {
-    res.json({info: 'Node.js, Express, and Postgres API'})
-})
+//set app as our express server
+//We use our enviroment variable to set port number
+const app = express();
+const apiPort = process.env.BE_PORT;
 
-app.use('/api/v1',
-userRouter,
-clientRouter,
-projectRouter,
-workstationRouter
-)
+//Configure our app to allow CORS and accept json data.
+app.use(express.urlencoded({ extended: true }));
+app.use(cors());
+app.use(express.json());
 
+//Root of our api
+app.get("/", (req, res) => {
+  res.json({ info: "Node.js, Express, and Postgres API" });
+});
 
-app.listen(apiPort, () => console.log(`Server running on port ${apiPort}`))
+//Adding routes for our api
+app.get("/users", user.readAll);
+app.post("/users", user.writeOne);
+//Set the app to listen
+app.listen(apiPort, () => console.log(`Server running on port ${apiPort}`));
+
+//export our app for testing
+export default app;

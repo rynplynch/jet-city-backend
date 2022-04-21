@@ -1,10 +1,10 @@
-const db = require('../db')
+const db = require("../db");
 
-create = async (req, res) =>{
+create = async (req, res) => {
   try {
     console.log("[POST] {api/v1/client}");
     const fields = {
-      name: req.body.name
+      name: req.body.name,
     };
 
     const createClient = await db.createOne("clients", fields);
@@ -18,14 +18,14 @@ create = async (req, res) =>{
     console.error(err);
     res.status(500).send({ msg: "Server error" });
   }
-}
+};
 
 update = async (req, res) => {
   try {
     console.log("[PUT] {api/v1/client}");
 
     const fields = {
-      name: req.body.name
+      name: req.body.name,
     };
     const userId = req.params.id;
     const conditions = { id: userId };
@@ -46,12 +46,15 @@ update = async (req, res) => {
 remove = async (req, res) => {
   try {
     console.log("[DELETE] {api/v1/Client}");
-    
-    
+
     const field = Object.keys(req.body);
     //body.id is expected to be an array
     const conditions = req.body.id;
-    const deleteClients = await db.deleteOneOrMany("Clients", conditions, field);
+    const deleteClients = await db.deleteOneOrMany(
+      "Clients",
+      conditions,
+      field
+    );
 
     if (deleteClients) {
       console.log(`Client with ids ${conditions} deleted successfully`);
@@ -62,7 +65,7 @@ remove = async (req, res) => {
     console.error(err);
     res.status(500).send({ msg: "Server error" });
   }
-}
+};
 
 findById = async (req, res) => {
   try {
@@ -71,7 +74,7 @@ findById = async (req, res) => {
     console.log(`[GET] {api/v1/Client/${userId}}`);
 
     const column = req.body.column;
-    const conditions = {id: userId} ;
+    const conditions = { id: userId };
 
     const findClient = await db.findSelection("Clients", conditions, column);
 
@@ -80,18 +83,16 @@ findById = async (req, res) => {
       return res.json(findClient);
     }
     res.status(404).json({ msg: "Bad request" });
-  } 
-  
-  catch (err) {
+  } catch (err) {
     console.error(err);
     res.status(500).send({ msg: "Server error" });
   }
-}
+};
 
 findAll = async (req, res) => {
   try {
     const column = req.body.column;
-    const conditions = undefined ;
+    const conditions = undefined;
     const findClient = await db.findSelection("Clients", conditions, column);
     console.log(`[GET] {api/v1/Client}`);
 
@@ -100,18 +101,16 @@ findAll = async (req, res) => {
       return res.json(findClient);
     }
     res.status(404).json({ msg: "Bad request" });
-  } 
-  
-  catch (err) {
+  } catch (err) {
     console.error(err);
     res.status(500).send({ msg: "Server error" });
   }
-}
+};
 
 module.exports = {
-    create,
-    update,
-    remove,
-    findAll,
-    findById
-}
+  create,
+  update,
+  remove,
+  findAll,
+  findById,
+};

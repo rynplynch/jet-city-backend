@@ -1,12 +1,12 @@
-const db = require('../db')
+const db = require("../db");
 
-create = async (req, res) =>{
+create = async (req, res) => {
   try {
     console.log("[POST] {api/v1/user}");
     const fields = {
       first_name: req.body.first_name,
       last_name: req.body.last_name,
-      email: req.body.email
+      email: req.body.email,
     };
 
     const createUser = await db.createOne("users", fields);
@@ -20,7 +20,7 @@ create = async (req, res) =>{
     console.error(err);
     res.status(500).send({ msg: "Server error" });
   }
-}
+};
 
 update = async (req, res) => {
   try {
@@ -29,7 +29,7 @@ update = async (req, res) => {
     const fields = {
       first_name: req.body.first_name,
       last_name: req.body.last_name,
-      email: req.body.email
+      email: req.body.email,
     };
     const userId = req.params.id;
     const conditions = { id: userId };
@@ -50,8 +50,7 @@ update = async (req, res) => {
 remove = async (req, res) => {
   try {
     console.log("[DELETE] {api/v1/User}");
-    
-    
+
     const field = Object.keys(req.body);
     //body.id is expected to be an array
     const conditions = req.body.id;
@@ -66,7 +65,7 @@ remove = async (req, res) => {
     console.error(err);
     res.status(500).send({ msg: "Server error" });
   }
-}
+};
 
 findById = async (req, res) => {
   try {
@@ -75,7 +74,7 @@ findById = async (req, res) => {
     console.log(`[GET] {api/v1/User/${userId}}`);
 
     const column = req.body.column;
-    const conditions = {id: userId} ;
+    const conditions = { id: userId };
 
     const findUser = await db.findSelection("Users", conditions, column);
 
@@ -84,18 +83,16 @@ findById = async (req, res) => {
       return res.json(findUser);
     }
     res.status(404).json({ msg: "Bad request" });
-  } 
-  
-  catch (err) {
+  } catch (err) {
     console.error(err);
     res.status(500).send({ msg: "Server error" });
   }
-}
+};
 
 findAll = async (req, res) => {
   try {
     const column = req.body.column;
-    const conditions = undefined ;
+    const conditions = undefined;
     const findUser = await db.findSelection("Users", conditions, column);
     console.log(`[GET] {api/v1/User}`);
 
@@ -104,18 +101,16 @@ findAll = async (req, res) => {
       return res.json(findUser);
     }
     res.status(404).json({ msg: "Bad request" });
-  } 
-  
-  catch (err) {
+  } catch (err) {
     console.error(err);
     res.status(500).send({ msg: "Server error" });
   }
-}
+};
 
 module.exports = {
-    create,
-    update,
-    remove,
-    findAll,
-    findById
-}
+  create,
+  update,
+  remove,
+  findAll,
+  findById,
+};

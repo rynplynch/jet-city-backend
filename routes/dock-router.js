@@ -1,15 +1,15 @@
-const express = require('express')
+const express = require("express");
 
-const DockCtrl = require('../controllers/dock-ctrl')
+const DockCtrl = require("../controllers/dock-ctrl");
 
-const router = express.Router()
+const router = express.Router();
 
-router.post('/dock', DockCtrl.create)
-router.put('/dock/:id', DockCtrl.update)
-router.delete('/dock/:id', DockCtrl.remove)
-router.get('/dock/:id', DockCtrl.find)
-router.get('/docks', DockCtrl.getAll)
+router.post("/dock", DockCtrl.create);
+router.put("/dock/:id", DockCtrl.update);
+router.delete("/dock/:id", DockCtrl.remove);
+router.get("/dock/:id", DockCtrl.find);
+router.get("/docks", DockCtrl.getAll);
 
-router.get('/workstation/docks/:id', DockCtrl.findByWorkstation)
+router.get("/workstation/docks/:id", DockCtrl.findByWorkstation);
 
-module.exports = router
+module.exports = router;
