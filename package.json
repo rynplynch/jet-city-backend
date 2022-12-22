@@ -4,6 +4,10 @@
   "version": "1.0.0",
   "description": "This backend will server up data stored in a postgres database \nfor use in the frontend. Endpoints will have sensible naming \nto reflect the structor of the data and how each object relates",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rynplynch/jet-city-be"
+  },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
@@ -23,12 +27,14 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.29.4",
     "mocha": "^9.2.2",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "nyc": "^15.1.0"
   },
   "scripts": {
     "start": "node index.js",
     "test": "./node_modules/.bin/mocha test",
     "dev": "nodemon index.js",
+    "nyc": "nyc mocha ./test",
     "lint": "eslint . --fix"
   },
   "keywords": [],
